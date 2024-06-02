@@ -3,7 +3,6 @@ using api.Data;
 using api.Extensions;
 using api.Interfaces;
 using api.Models;
-using api.Repository;
 using api.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -82,7 +81,7 @@ namespace api
             //Authentication
             builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
             {
-                options.Password.RequireDigit = true;
+                options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
@@ -111,12 +110,7 @@ namespace api
                 };
             });
 
-            builder.Services.AddScoped<IStockRepository, StockRepository>();
-            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-            builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
             builder.Services.AddScoped<ITokenService, TokenService>();
-            builder.Services.AddScoped<IFMPService, FMPService>();
-            builder.Services.AddHttpClient<IFMPService, FMPService>();
 
             var app = builder.Build();
 
