@@ -23,12 +23,11 @@ namespace api
             // Add services to the container.
             builder.Services.AddAuthorization();
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Finshark API", Version = "v1" });
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Apteka API", Version = "v1" });
                 option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
