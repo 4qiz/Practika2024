@@ -3,11 +3,13 @@ using api.Dtos.Medicine;
 using api.Helpers;
 using api.Mappers;
 using api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MedicineController : ControllerBase
@@ -24,7 +26,7 @@ namespace api.Controllers
         /// </summary>
         /// <param name="query">The query object containing filters for fetching medicines.</param>
         /// <returns>A list of MedicineDto objects based on the query filters.</returns>
-        /// <response code="200">A list of Medicines based on the query filters.</response>
+        /// <response code="200">A list of Medicines</response>
         /// <response code="404">Search result is empty</response>
         [HttpGet]
         public async Task<ActionResult<List<MedicineDto>>> GetMedicines([FromQuery] MedicineQueryObject query)
