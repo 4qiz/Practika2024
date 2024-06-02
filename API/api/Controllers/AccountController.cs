@@ -22,6 +22,14 @@ namespace api.Controllers
             _signInManager = signInManager;
         }
 
+        /// <summary>
+        /// Authenticates a user with the login and password.
+        /// </summary>
+        /// <param name="login">The login credentials containing username and password.</param>
+        /// <returns>Returns user information and token upon successful login.</returns>
+        /// <response code="200">Returns the user's information and token.</response>
+        /// <response code="400">If the provided request data is invalid.</response>
+        /// <response code="401">If the username or password is invalid.</response>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
@@ -51,6 +59,14 @@ namespace api.Controllers
             });
         }
 
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <param name="register">Login, email and password</param>
+        /// <returns>Returns the user information and token if registration is successful.</returns>
+        /// <response code="200">Returns the newly registered user's information and token.</response>
+        /// <response code="400">If the provided request data is invalid.</response>
+        /// <response code="500">If an error occurs during user creation or role assignment.</response>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto register)
         {

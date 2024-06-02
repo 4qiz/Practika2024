@@ -52,6 +52,8 @@ namespace api
                         new string[]{}
                     }
                 });
+                var filePath = Path.Combine(AppContext.BaseDirectory, System.Reflection.Assembly.GetEntryAssembly().GetName().Name + ".xml");
+                option.IncludeXmlComments(filePath);
             });
 
             //Add Newtonsoft

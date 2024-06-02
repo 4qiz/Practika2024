@@ -19,7 +19,13 @@ namespace api.Controllers
             _context = context;
         }
 
-        // GET: api/Medicine
+        /// <summary>
+        /// Fetches a list of medicines based on the provided query parameters.
+        /// </summary>
+        /// <param name="query">The query object containing filters for fetching medicines.</param>
+        /// <returns>A list of MedicineDto objects based on the query filters.</returns>
+        /// <response code="200">A list of Medicines based on the query filters.</response>
+        /// <response code="404">Search result is empty</response>
         [HttpGet]
         public async Task<ActionResult<List<MedicineDto>>> GetMedicines([FromQuery] MedicineQueryObject query)
         {
@@ -36,7 +42,7 @@ namespace api.Controllers
                 var warehouse = _context.Warehouses.FirstOrDefault(w => w.Name.ToLower().Contains(query.WarehouseTitle.ToLower()));
                 if (warehouse == null)
                 {
-                    return NotFound("склад не найден");
+                    return NotFound("Склад не найден");
                 }
                 medicines = medicines.Where(m => m.WarehouseHasMedicines != null && m.WarehouseHasMedicines.Any(wm => wm.WarehouseId == warehouse.WarehouseId));
             }
