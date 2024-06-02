@@ -13,12 +13,6 @@ namespace api.Data
 
         }
 
-        public DbSet<Stock> Stocks { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Portfolio> Portfolios { get; set; }
-
-        //apteka
-
         public virtual DbSet<IssueRequest> IssueRequests { get; set; }
 
         public virtual DbSet<IssueRequestHasMedicine> IssueRequestHasMedicines { get; set; }
@@ -31,16 +25,6 @@ namespace api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Portfolio>(x => x.HasKey(p => new { p.AppUserId, p.StockId }));
-            modelBuilder.Entity<Portfolio>()
-                .HasOne(u => u.AppUser)
-                .WithMany(u => u.Portfolios)
-                .HasForeignKey(p => p.AppUserId);
-            modelBuilder.Entity<Portfolio>()
-                .HasOne(u => u.Stock)
-                .WithMany(u => u.Portfolios)
-                .HasForeignKey(p => p.StockId);
 
             List<IdentityRole> roles = new List<IdentityRole>()
             {
