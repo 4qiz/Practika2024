@@ -1,5 +1,6 @@
 ﻿using api.Data;
 using api.Dtos.Medicine;
+using api.Helpers;
 using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -20,16 +21,29 @@ namespace api.Controllers
 
         // GET: api/Medicine
         [HttpGet]
-        public async Task<ActionResult<List<MedicineDto>>> GetMedicines()
+        public async Task<ActionResult<List<MedicineDto>>> GetMedicines([FromQuery] MedicineQueryObject query)
         {
             if (_context.Medicines == null)
             {
                 return NotFound();
             }
-            var medicines = await _context.Medicines.Include(m=> m.WarehouseHasMedicines).ToListAsync();
-            var medicinesDto = medicines.Select(m=>m.ToDtoFromMedicine());
-            
-            return Ok(medicinesDto);
+            var medicines = _context.Medicines
+                .Include(m => m.WarehouseHasMedicines)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.WarehouseTitle))
+            {
+                var warehouse = _context.Warehouses.FirstOrDefault(w => w.Name.ToLower().Contains(query.WarehouseTitle.ToLower()));
+                if (warehouse == null)
+                {
+                    return NotFound("склад не найден");
+                }
+                medicines = medicines.Where(m => m.WarehouseHasMedicines != null && m.WarehouseHasMedicines.Any(wm => wm.WarehouseId == warehouse.WarehouseId));
+            }
+
+            var medicinesFiltered = await medicines.ToListAsync();
+
+            return Ok(medicinesFiltered.Select(m => m.ToDtoFromMedicine()));
         }
 
         // GET: api/Medicine/5
@@ -52,7 +66,7 @@ namespace api.Controllers
             return medicine.ToDtoFromMedicine();
         }
 
-       
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMedicine(int id, MedicineDto medicineDto)
         {

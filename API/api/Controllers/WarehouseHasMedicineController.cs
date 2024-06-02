@@ -89,12 +89,11 @@ namespace api.Controllers
                 {
                     return NotFound($"Препарат id = {createDto.MedicineId} не найден на складе id = {createDto.WarehouseId}");
                 }
-                if (warehouseHasMedicine.Quantity < 0)
+                if (warehouseHasMedicine.Quantity < createDto.Quantity)
                 {
                     return BadRequest("Списание больше, чем есть на складе");
                 }
                 warehouseHasMedicine.Quantity -= createDto.Quantity;
-
 
                 _context.Update(warehouseHasMedicine);
                 await _context.SaveChangesAsync();
