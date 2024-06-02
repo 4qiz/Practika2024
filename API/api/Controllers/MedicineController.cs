@@ -72,53 +72,11 @@ namespace api.Controllers
             return medicine.ToDtoFromMedicine();
         }
 
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMedicine(int id, MedicineDto medicineDto)
-        {
-            if (id != medicineDto.MedicineId)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                var warehouseHasMedicine = new WarehouseHasMedicine
-                {
-
-                };
-
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MedicineExists(id))
-                {
-                    return NotFound("Препарат не найден");
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-
-            return NoContent();
-        }
-
         [HttpPost]
         public async Task<ActionResult<Medicine>> PostMedicine(MedicineDto medicineDto)
         {
             var medicine = medicineDto.ToMedicineFromDto();
             _context.Medicines.Add(medicine);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("PostMedicine", new { id = medicineDto.MedicineId }, medicineDto);
-        }
-
-        [HttpPost("with_warehouse")]
-        public async Task<ActionResult<Medicine>> PostMedicineWithWarehouse(MedicineDto medicineDto)
-        {
-            //todo
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("PostMedicine", new { id = medicineDto.MedicineId }, medicineDto);
