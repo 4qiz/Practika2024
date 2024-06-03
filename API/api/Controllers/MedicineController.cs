@@ -1,9 +1,9 @@
 ﻿using api.Data;
 using api.Dtos.Medicine;
+using api.Dtos.WarehouseHasMedicine;
 using api.Helpers;
 using api.Mappers;
 using api.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -84,6 +84,174 @@ namespace api.Controllers
             return CreatedAtAction("PostMedicine", new { id = medicineDto.MedicineId }, medicineDto);
         }
 
+        [HttpPost("add")]
+        public async Task<IActionResult> AddMedicineToWarehouse(WarehouseHasMedicineCreateDto createDto)
+        {
+            if (createDto.Quantity <= 0)
+            {
+                return BadRequest("Не возможно добавить отрицательное/нулевое количество");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!MedicineExists(createDto.MedicineId))
+            {
+                return NotFound($"Препарат не найден id = {createDto.MedicineId}");
+            }
+            if (!WarehouseExists(createDto.WarehouseId))
+            {
+                return NotFound($"Склад не найден id = {createDto.WarehouseId}");
+            }
+
+            try
+            {
+                var warehouseHasMedicine = await _context.WarehouseHasMedicines
+                    .FirstOrDefaultAsync(wm => wm.WarehouseId == createDto.WarehouseId
+                        && wm.MedicineId == createDto.MedicineId);
+
+                if (warehouseHasMedicine == null)
+                {
+                    warehouseHasMedicine = new WarehouseHasMedicine();
+                    warehouseHasMedicine.MedicineId = createDto.MedicineId;
+                    warehouseHasMedicine.WarehouseId = createDto.WarehouseId;
+                    warehouseHasMedicine.Quantity = createDto.Quantity;
+                    await _context.WarehouseHasMedicines.AddAsync(warehouseHasMedicine);
+                }
+                else
+                {
+                    warehouseHasMedicine.Quantity += createDto.Quantity;
+                    _context.Update(warehouseHasMedicine);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            return Created();
+        }
+
+        [HttpPost("writeoff")]
+        public async Task<IActionResult> WriteoffMedicineFromWarehouse(WarehouseHasMedicineCreateDto createDto)
+        {
+            if (createDto.Quantity <= 0)
+            {
+                return BadRequest("Не возможно делать списание отрицательного/нулевого количества");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!MedicineExists(createDto.MedicineId))
+            {
+                return NotFound($"Препарат не найден id = {createDto.MedicineId}");
+            }
+            if (!WarehouseExists(createDto.WarehouseId))
+            {
+                return NotFound($"Склад не найден id = {createDto.WarehouseId}");
+            }
+
+            try
+            {
+                var warehouseHasMedicine = await _context.WarehouseHasMedicines
+                    .FirstOrDefaultAsync(wm => wm.WarehouseId == createDto.WarehouseId
+                        && wm.MedicineId == createDto.MedicineId);
+
+                if (warehouseHasMedicine == null)
+                {
+                    return NotFound($"Препарат id = {createDto.MedicineId} не найден на складе id = {createDto.WarehouseId}");
+                }
+                if (warehouseHasMedicine.Quantity < createDto.Quantity)
+                {
+                    return BadRequest("Списание больше, чем есть на складе");
+                }
+                warehouseHasMedicine.Quantity -= createDto.Quantity;
+
+                _context.Update(warehouseHasMedicine);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            return Created();
+        }
+
+        [HttpPost("Transfer")]
+        public async Task<ActionResult<MedicineDto>> TransferMedicine([FromBody] TransferMedicineDto transfer)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (transfer.ToWarehouseId == transfer.FromWarehouseId)
+            {
+                return BadRequest("Склад назначения совпадает с текущим складом");
+            }
+            if (!WarehouseExists(transfer.FromWarehouseId))
+            {
+                return NotFound($"Склад отправитель с указанным Id = {transfer.FromWarehouseId} не найден");
+            }
+            if (!WarehouseExists(transfer.ToWarehouseId))
+            {
+                return NotFound($"Склад получатель с указанным Id = {transfer.ToWarehouseId} не найден");
+            }
+            if (!MedicineExists(transfer.MedicineId))
+            {
+                return NotFound($"Препарат с Id = {transfer.MedicineId} не найден");
+            }
+
+            try
+            {
+                var fromWarehouseHasMedicine = await _context.WarehouseHasMedicines
+                    .FirstOrDefaultAsync(wm => wm.WarehouseId == transfer.FromWarehouseId
+                        && wm.MedicineId == transfer.MedicineId);
+
+                if (fromWarehouseHasMedicine == null)
+                {
+                    return NotFound($"Препарат id = {transfer.MedicineId} не найден на складе id = {transfer.FromWarehouseId}");
+                }
+                if (fromWarehouseHasMedicine.Quantity < transfer.Quantity)
+                {
+                    return BadRequest("Списание больше, чем есть на складе");
+                }
+                fromWarehouseHasMedicine.Quantity -= transfer.Quantity;
+                _context.Update(fromWarehouseHasMedicine);
+
+                var toWarehouseHasMedicine = await _context.WarehouseHasMedicines
+                    .FirstOrDefaultAsync(wm => wm.WarehouseId == transfer.ToWarehouseId
+                        && wm.MedicineId == transfer.MedicineId);
+
+                if (toWarehouseHasMedicine == null)
+                {
+                    toWarehouseHasMedicine = new WarehouseHasMedicine
+                    {
+                        MedicineId = transfer.MedicineId,
+                        WarehouseId = transfer.ToWarehouseId,
+                        Quantity = transfer.Quantity,
+                    };
+                   await _context.AddAsync(toWarehouseHasMedicine);
+                }
+                else
+                {
+                    toWarehouseHasMedicine.Quantity += transfer.Quantity;
+                    _context.Update(toWarehouseHasMedicine);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            return Created();
+        }
+
         [HttpPost("import_list")]
         public async Task<ActionResult<Medicine>> PostMedicines(List<MedicineDto> medicineDto)
         {
@@ -115,6 +283,11 @@ namespace api.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private bool WarehouseExists(int id)
+        {
+            return (_context.Warehouses?.Any(e => e.WarehouseId == id)).GetValueOrDefault();
         }
 
         private bool MedicineExists(int id)
