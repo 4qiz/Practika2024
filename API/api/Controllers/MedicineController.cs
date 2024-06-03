@@ -37,6 +37,7 @@ namespace api.Controllers
             }
             var medicines = _context.Medicines
                 .Include(m => m.WarehouseHasMedicines)
+                .Include(m => m.Manufacturer)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(query.WarehouseTitle))
@@ -64,6 +65,7 @@ namespace api.Controllers
             }
             var medicine = await _context.Medicines
                 .Include(m => m.WarehouseHasMedicines)
+                .Include(m => m.Manufacturer)
                 .FirstOrDefaultAsync(m => m.MedicineId == id);
 
             if (medicine == null)
@@ -77,7 +79,12 @@ namespace api.Controllers
         [HttpPost]
         public async Task<ActionResult<Medicine>> PostMedicine(MedicineDto medicineDto)
         {
-            var medicine = medicineDto.ToMedicineFromDto();
+            var manufacturer = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Title.Equals(medicineDto.Manufacturer));
+            if (manufacturer == null)
+            {
+                manufacturer = new Manufacturer { Title = medicineDto.Manufacturer };
+            }
+            var medicine = medicineDto.ToMedicineFromDto(manufacturer);
             _context.Medicines.Add(medicine);
             await _context.SaveChangesAsync();
 
@@ -258,7 +265,12 @@ namespace api.Controllers
             var medicines = new List<Medicine>();
             foreach (var item in medicineDto)
             {
-                _context.Medicines.Add(item.ToMedicineFromDto());
+                var manufacturer = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Title.Equals(item.Manufacturer));
+                if (manufacturer == null)
+                {
+                    manufacturer = new Manufacturer { Title = item.Manufacturer };
+                }
+                _context.Medicines.Add(item.ToMedicineFromDto(manufacturer));
             }
             await _context.SaveChangesAsync();
 

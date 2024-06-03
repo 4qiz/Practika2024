@@ -1,4 +1,6 @@
-﻿namespace api.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace api.Models
 {
     public partial class Medicine
     {
@@ -8,7 +10,9 @@
 
         public string TradeName { get; set; } = null!;
 
-        public string Manufacturer { get; set; } = null!;
+        public int ManufacturerId { get; set; }
+
+        public Manufacturer Manufacturer { get; set; } = null!;
 
         public string? Image { get; set; }
 

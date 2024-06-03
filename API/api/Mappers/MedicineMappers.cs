@@ -5,12 +5,12 @@ namespace api.Mappers
 {
     public static class MedicineMappers
     {
-        public static Medicine ToMedicineFromDto(this MedicineDto medicineDto)
+        public static Medicine ToMedicineFromDto(this MedicineDto medicineDto, Manufacturer manufacturer)
         {
             return new Medicine
             {
                 Image = medicineDto.Image,
-                Manufacturer = medicineDto.Manufacturer,
+                Manufacturer = manufacturer,
                 Name = medicineDto.Name,
                 Price = medicineDto.Price,
                 TradeName = medicineDto.TradeName
@@ -23,7 +23,7 @@ namespace api.Mappers
             {
                 MedicineId = medicine.MedicineId,
                 Image = medicine.Image,
-                Manufacturer = medicine.Manufacturer,
+                Manufacturer = medicine.Manufacturer.Title,
                 Name = medicine.Name,
                 Price = medicine.Price,
                 TradeName = medicine.TradeName,

@@ -20,7 +20,10 @@ namespace api.Data
         public virtual DbSet<Medicine> Medicines { get; set; }
 
         public virtual DbSet<Warehouse> Warehouses { get; set; }
+
         public virtual DbSet<WarehouseHasMedicine> WarehouseHasMedicines { get; set; }
+
+        public virtual DbSet<Manufacturer> Manufacturers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -78,16 +81,27 @@ namespace api.Data
                 entity.ToTable("Medicine");
 
                 entity.Property(e => e.Image).HasMaxLength(500);
-                entity.Property(e => e.Manufacturer).HasMaxLength(50);
                 entity.Property(e => e.Name).HasMaxLength(200);
                 entity.Property(e => e.Price).HasColumnType("decimal(13, 2)");
                 entity.Property(e => e.TradeName).HasMaxLength(50);
+
+                entity.HasOne(m => m.Manufacturer)
+                .WithMany(m => m.Medicines)
+                .HasForeignKey(m => m.ManufacturerId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Medicine_Manufacturer");
             });
+
             modelBuilder.Entity<Medicine>()
                 .HasMany(e => e.Warehouses)
                 .WithMany(e => e.Medicines)
                 .UsingEntity<WarehouseHasMedicine>();
 
+            modelBuilder.Entity<Manufacturer>(entity =>
+            {
+                entity.HasKey(e => e.ManufacturerId);
+                entity.ToTable("Manufacturer");
+            });
 
             modelBuilder.Entity<Warehouse>(entity =>
             {
@@ -96,6 +110,7 @@ namespace api.Data
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
+            //seed data
             List<Warehouse> warehouses = new List<Warehouse>()
             {
                 new Warehouse
@@ -117,6 +132,7 @@ namespace api.Data
 
             modelBuilder.Entity<Warehouse>().HasData(warehouses);
 
+            //
             List<Medicine> medicine = new List<Medicine>()
             {
                 new Medicine
@@ -124,7 +140,7 @@ namespace api.Data
                     MedicineId = 1,
                     Name = "Вольтарен 25мг/мл 3мл 5 шт. раствор для внутримышечного введения",
                     TradeName = "Вольтарен",
-                    Manufacturer = "Новартис Фарма АГ",
+                    ManufacturerId = 1,
                     Image = "https://imgs.asna.ru/iblock/2d7/2d71cac199086932e4b68e6ae633eca8/100082.jpg",
                     Price = 79,
                 },
@@ -133,7 +149,7 @@ namespace api.Data
                     MedicineId = 2,
                     Name = "Кальцекс 500мг 10 шт. таблетки татхимфарм",
                     TradeName = "Кальцекс",
-                    Manufacturer = "Татхимфармпрепараты АО",
+                    ManufacturerId = 2,
                     Image = "https://imgs.asna.ru/iblock/177/177882ef988b42be05abd45dbb7d5fba/816f88b93afa5c096afbeec679ffd4c0.jpg",
                     Price = 42,
                 },
@@ -141,6 +157,7 @@ namespace api.Data
 
             modelBuilder.Entity<Medicine>().HasData(medicine);
 
+            //
             List<WarehouseHasMedicine> warehouseHasMedicines = new List<WarehouseHasMedicine>()
             {
                 new WarehouseHasMedicine
@@ -152,6 +169,23 @@ namespace api.Data
             };
 
             modelBuilder.Entity<WarehouseHasMedicine>().HasData(warehouseHasMedicines);
+
+            //
+            List<Manufacturer> manufacturers = new()
+            {
+                new Manufacturer
+                {
+                    ManufacturerId = 1,
+                    Title = "Новартис Фарма АГ"
+                },
+                new Manufacturer
+                {
+                    ManufacturerId = 2,
+                    Title = "Татхимфармпрепараты АО"
+                },
+            };
+
+            modelBuilder.Entity<Manufacturer>().HasData(manufacturers);
         }
 
     }

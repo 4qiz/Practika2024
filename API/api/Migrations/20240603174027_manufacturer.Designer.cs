@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using api.Data;
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240603174027_manufacturer")]
+    partial class manufacturer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,13 +53,13 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a799c9e2-583b-44c6-90de-6a8cf2e8480a",
+                            Id = "7a10f8a4-3c44-4f3b-8c45-0ece22771d47",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "612087f8-61c8-4925-bf21-330511f0b951",
+                            Id = "adaacfaf-f7a4-4f58-932c-6bc9fbcce7e2",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -501,7 +504,6 @@ namespace api.Migrations
                     b.HasOne("api.Models.Manufacturer", "Manufacturer")
                         .WithMany("Medicines")
                         .HasForeignKey("ManufacturerId")
-                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired()
                         .HasConstraintName("FK_Medicine_Manufacturer");
 
