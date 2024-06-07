@@ -116,11 +116,11 @@ namespace api
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-                //app.ApplyMigrations();
+                app.ApplyMigrations();
             }
 
             app.UseCors(options => options
@@ -128,7 +128,7 @@ namespace api
             .AllowAnyHeader()
             .AllowCredentials()
             .WithOrigins("https://localhost:3000")
-            .SetIsOriginAllowed(o=>true)
+            .SetIsOriginAllowed(o => true)
             );
 
             app.UseAuthentication();

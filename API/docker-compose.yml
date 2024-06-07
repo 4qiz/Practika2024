@@ -3,17 +3,15 @@ version: '3.4'
 services:
   backend:
     image: ${DOCKER_REGISTRY-}api
+    container_name: backend
+    hostname: backend
     build:
       context: .
       dockerfile: api/Dockerfile
     depends_on:
       - postgres_db
-
-  client:
-    image: client
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    networks:
+      - local_net
 
   postgres_db:
     container_name: postgres
@@ -22,10 +20,15 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1
       - POSTGRES_DB=finshark
-    ports:
-      - "5433:5432"
     restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data
+
 volumes:
   postgres-data:
+
+networks:
+  local_net:
+    external: true
+    driver: bridge
+    name: services
