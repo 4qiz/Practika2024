@@ -2,7 +2,9 @@ package com.lakedev.apteka.survey
 
 import android.content.Context
 import android.content.ContextWrapper
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresExtension
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -24,9 +26,11 @@ private const val CONTENT_ANIMATION_DURATION = 300
 /**
  * Displays a [SurveyQuestionsScreen] tied to the passed [SurveyViewModel]
  */
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun SurveyRoute(
     onSurveyComplete: () -> Unit,
+    onNavigateToDetails: (id: Int) -> Unit,
     onNavUp: () -> Unit,
 ) {
     val viewModel: SurveyViewModel = viewModel(
@@ -55,7 +59,7 @@ fun SurveyRoute(
         val modifier = Modifier.padding(paddingValues)
 
         //content
-        MedicinesList(viewModel)
+        MedicinesList(viewModel, modifier, onNavigateToDetails)
 
     }
 }

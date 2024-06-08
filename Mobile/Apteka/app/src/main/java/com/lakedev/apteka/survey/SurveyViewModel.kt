@@ -1,7 +1,10 @@
 package com.lakedev.apteka.survey
 
 import android.net.Uri
+import android.net.http.HttpException
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresExtension
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -12,7 +15,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.lakedev.apteka.data.RetrofitInstance
 import com.lakedev.apteka.data.dtos.medicine.MedicineGetDto
+import com.lakedev.apteka.signinsignup.User
+import com.lakedev.apteka.signinsignup.UserRepository
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 
 const val simpleDateFormatPattern = "EEE, MMM d"
 
@@ -24,6 +30,7 @@ class SurveyViewModel(
 
     var medicines by mutableStateOf<List<MedicineGetDto>>(emptyList())
 
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     fun getMedicines() {
         viewModelScope.launch {
             try {
@@ -35,6 +42,13 @@ class SurveyViewModel(
                 Log.e("SurveyViewModel", e.message ?: "")
             }
         }
+    }
+
+    fun handleContinue(
+        id: Int,
+        onNavigateToDetails: (id: Int) -> Unit,
+    ) {
+        onNavigateToDetails(id)
     }
 
     private val questionOrder: List<SurveyQuestion> = listOf(

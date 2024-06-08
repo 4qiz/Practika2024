@@ -9,5 +9,5 @@ data class MedicineGetDto(
     @SerializedName("manufacturer") var manufacturer: String? = null,
     @SerializedName("image") var image: String? = null,
     @SerializedName("price") var price: Int? = null,
-    @SerializedName("warehouseHasMedicineDto") var warehouseHasMedicineDto: ArrayList<WarehouseHasMedicineDto> = arrayListOf()
+    @SerializedName("warehouseHasMedicineDto") var warehouseHasMedicineDto: List<WarehouseHasMedicineDto> = emptyList<WarehouseHasMedicineDto>()
 )

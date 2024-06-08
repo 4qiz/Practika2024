@@ -4,9 +4,12 @@ import android.os.Build
 import androidx.annotation.RequiresExtension
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.lakedev.apteka.Destinations.MEDICINE_DETAILS
 import com.lakedev.apteka.Destinations.SIGN_IN_ROUTE
 import com.lakedev.apteka.Destinations.SIGN_UP_ROUTE
 import com.lakedev.apteka.Destinations.SURVEY_RESULTS_ROUTE
@@ -16,6 +19,7 @@ import com.lakedev.apteka.signinsignup.SignInRoute
 import com.lakedev.apteka.signinsignup.WelcomeRoute
 import com.lakedev.apteka.survey.SurveyResultScreen
 import com.lakedev.apteka.survey.SurveyRoute
+import com.lakedev.apteka.survey.medicine_details.MedicineDetailsRoute
 
 object Destinations {
     const val WELCOME_ROUTE = "welcome"
@@ -23,6 +27,7 @@ object Destinations {
     const val SIGN_IN_ROUTE = "signin/{email}"
     const val SURVEY_ROUTE = "survey"
     const val SURVEY_RESULTS_ROUTE = "surveyresults"
+    const val MEDICINE_DETAILS = "medicine/{id}"
 }
 
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
@@ -81,6 +86,9 @@ fun AptekaNavHost(
                 onSurveyComplete = {
                     navController.navigate(SURVEY_RESULTS_ROUTE)
                 },
+                onNavigateToDetails = {
+                    navController.navigate("medicine/$it")
+                },
                 onNavUp = navController::navigateUp,
             )
         }
@@ -88,6 +96,20 @@ fun AptekaNavHost(
         composable(SURVEY_RESULTS_ROUTE) {
             SurveyResultScreen {
                 navController.popBackStack(WELCOME_ROUTE, false)
+            }
+        }
+
+        composable(route = MEDICINE_DETAILS,
+            arguments = listOf(navArgument("id") {
+                type = NavType.IntType
+            })
+        ) {
+            val medicineId = it.arguments?.getInt("id")
+            if (medicineId != null) {
+                MedicineDetailsRoute(
+                    id = medicineId,
+                    onNavUp = navController::navigateUp,
+                )
             }
         }
     }
