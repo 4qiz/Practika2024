@@ -1,6 +1,7 @@
 package com.lakedev.apteka.data
 
 import com.lakedev.apteka.data.dtos.medicine.MedicineGetDto
+import com.lakedev.apteka.data.dtos.medicine.MedicineOnWarehouseDto
 import com.lakedev.apteka.data.dtos.signinsignup.LoginRequestDto
 import com.lakedev.apteka.data.dtos.signinsignup.LoginResponseDto
 import retrofit2.Response
@@ -18,4 +19,10 @@ interface ApiService {
 
     @GET("Medicine/{id}")
     suspend fun getMedicine(@Path("id") id: Int): MedicineGetDto
+
+    @POST("Medicine/writeoff")
+    suspend fun writeOff(@Body medicineOnWarehouseDto: MedicineOnWarehouseDto): Response<String>
+
+    @POST("Medicine/add")
+    suspend fun addToWarehouse(@Body medicineOnWarehouseDto: MedicineOnWarehouseDto): Response<String>
 }

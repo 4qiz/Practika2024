@@ -11,7 +11,7 @@ fun MedicineDetailsRoute(
     id: Int,
     onNavUp: () -> Unit,
 ) {
-    val medicineDetailsViewModel: MedicineDetailsViewModel = viewModel(factory = MedicineDetailsViewModelFactory())
+    val medicineDetailsViewModel: MedicineDetailsViewModel = viewModel(factory = MedicineDetailsViewModelFactory(id))
 
     if (id < 1){
         onNavUp()

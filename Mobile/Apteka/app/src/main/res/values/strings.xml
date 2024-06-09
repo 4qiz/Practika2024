@@ -68,5 +68,8 @@
     <string name="medicines">Препараты</string>
     <string name="medicine">Препарат</string>
     <string name="availability">Наличие на складах</string>
+    <string name="writeoff">Списать</string>
+    <string name="writeoff_dialog_text">Укажите количество списанных препаратов</string>
+    <string name="writeoff_dialog_label">Количество (1..99)</string>
 
 </resources>

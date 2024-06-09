@@ -30,6 +30,7 @@ androidxHiltNavigationCompose = "1.2.0"
 androix-test-uiautomator = "2.3.0"
 coil = "2.6.0"
 # @keep
+coilCompose = "2.4.0"
 compileSdk = "34"
 converterGson = "2.9.0"
 coroutines = "1.8.0"
@@ -66,6 +67,7 @@ glanceMaterial3 = "1.1.0-beta02"
 glance = "1.1.0-beta02"
 composeBom = "2024.04.01"
 runtimeLivedata = "1.6.7"
+lifecycleRuntimeComposeAndroid = "2.8.1"
 
 [libraries]
 accompanist-adaptive = { module = "com.google.accompanist:accompanist-adaptive", version.ref = "accompanist" }
@@ -140,6 +142,7 @@ androidx-wear-compose-material = { group = "androidx.wear.compose", name = "comp
 androidx-wear-compose-ui-tooling = { module = "androidx.wear.compose:compose-ui-tooling", version.ref = "androidx-wear-compose" }
 androidx-window = { module = "androidx.window:window", version.ref = "androidx-window" }
 androidx-window-core = { module = "androidx.window:window-core", version.ref = "androidx-window" }
+coil-compose-v240 = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-kt-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core-jdk-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "jdkDesugar" }
@@ -184,6 +187,7 @@ glance-material3 = { group = "androidx.glance", name = "glance-material3", versi
 glance = { group = "androidx.glance", name = "glance", version.ref = "glance" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 
 
 [plugins]
