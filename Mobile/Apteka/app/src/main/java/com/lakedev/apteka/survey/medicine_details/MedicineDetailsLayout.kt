@@ -57,11 +57,11 @@ fun SignInSignUpScreen(
         contentPadding = contentPadding
     ) {
         item {
-            Spacer(modifier = Modifier.height(44.dp))
+            //Spacer(modifier = Modifier.height(44.dp))
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 0.dp)
             ) {
                 content()
             }
@@ -69,7 +69,7 @@ fun SignInSignUpScreen(
             OrSignInAsGuest(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
+                    //.padding(horizontal = 20.dp)
             )
         }
     }
@@ -84,10 +84,7 @@ fun SignInSignUpTopAppBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = topAppBarText,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
+                text = topAppBarText
             )
         },
         navigationIcon = {
@@ -98,10 +95,6 @@ fun SignInSignUpTopAppBar(
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
-        },
-        // We need to balance the navigation icon, so we add a spacer.
-        actions = {
-            Spacer(modifier = Modifier.width(68.dp))
         },
     )
 }
@@ -121,28 +114,30 @@ fun TextFieldError(textError: String) {
     }
 }
 
+//кнопки списать / оформить поставку (в списке складов)
 @Composable
 fun OrSignInAsGuest(
     modifier: Modifier = Modifier
 ) {
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = R.string.or),
+            text = "низ лейаута",
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = stronglyDeemphasizedAlpha),
             modifier = Modifier.paddingFromBaseline(top = 25.dp)
         )
-        OutlinedButton(
-            onClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp, bottom = 24.dp),
-        ) {
-            Text(text = stringResource(id = R.string.sign_in_guest))
-        }
+//        OutlinedButton(
+//            onClick = {},
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(top = 20.dp, bottom = 24.dp),
+//        ) {
+//            Text(text = stringResource(id = R.string.sign_in_guest))
+//        }
     }
 }
 

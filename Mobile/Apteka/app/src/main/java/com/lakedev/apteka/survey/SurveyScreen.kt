@@ -1,6 +1,5 @@
 package com.lakedev.apteka.survey
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -24,15 +22,12 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -41,7 +36,7 @@ import com.lakedev.apteka.ui.theme.stronglyDeemphasizedAlpha
 import com.lakedev.apteka.util.supportWideScreen
 
 @Composable
-fun SurveyQuestionsScreen(
+fun MedicineListLayout(
     surveyScreenData: SurveyScreenData,
     isNextEnabled: Boolean,
     onClosePressed: () -> Unit,
@@ -62,16 +57,16 @@ fun SurveyQuestionsScreen(
                 )
             },
             content = content,
-            bottomBar = {
-                SurveyBottomBar(
-                    shouldShowPreviousButton = surveyScreenData.shouldShowPreviousButton,
-                    shouldShowDoneButton = surveyScreenData.shouldShowDoneButton,
-                    isNextButtonEnabled = isNextEnabled,
-                    onPreviousPressed = onPreviousPressed,
-                    onNextPressed = onNextPressed,
-                    onDonePressed = onDonePressed
-                )
-            }
+//            bottomBar = {
+//                SurveyBottomBar(
+//                    shouldShowPreviousButton = surveyScreenData.shouldShowPreviousButton,
+//                    shouldShowDoneButton = surveyScreenData.shouldShowDoneButton,
+//                    isNextButtonEnabled = isNextEnabled,
+//                    onPreviousPressed = onPreviousPressed,
+//                    onNextPressed = onNextPressed,
+//                    onDonePressed = onDonePressed
+//                )
+//            }
         )
     }
 }
@@ -144,8 +139,8 @@ private fun TopAppBarTitle(
     Row(modifier = modifier) {
         Text(
             text = stringResource(id = R.string.medicines),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = stronglyDeemphasizedAlpha)
+            //style = MaterialTheme.typography.labelMedium,
+            //color = MaterialTheme.colorScheme.onSurface.copy(alpha = stronglyDeemphasizedAlpha)
         )
 //        Text(
 //            text = stringResource(R.string.question_count, totalQuestionsCount),
@@ -171,7 +166,8 @@ fun SurveyTopAppBar(
                     totalQuestionsCount = totalQuestionsCount,
                 )
             },
-            actions = {
+
+            navigationIcon = {
                 IconButton(
                     onClick = onClosePressed,
                     modifier = Modifier.padding(4.dp)

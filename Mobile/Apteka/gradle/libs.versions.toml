@@ -65,6 +65,7 @@ glanceAppwidget = "1.1.0-beta02"
 glanceMaterial3 = "1.1.0-beta02"
 glance = "1.1.0-beta02"
 composeBom = "2024.04.01"
+runtimeLivedata = "1.6.7"
 
 [libraries]
 accompanist-adaptive = { module = "com.google.accompanist:accompanist-adaptive", version.ref = "accompanist" }
@@ -182,6 +183,7 @@ glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", versi
 glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glanceMaterial3" }
 glance = { group = "androidx.glance", name = "glance", version.ref = "glance" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 
 [plugins]

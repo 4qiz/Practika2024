@@ -17,5 +17,5 @@ interface ApiService {
     suspend fun getMedicines(): List<MedicineGetDto>
 
     @GET("Medicine/{id}")
-    fun getMedicine(@Path("id") id: Int): MedicineGetDto
+    suspend fun getMedicine(@Path("id") id: Int): MedicineGetDto
 }

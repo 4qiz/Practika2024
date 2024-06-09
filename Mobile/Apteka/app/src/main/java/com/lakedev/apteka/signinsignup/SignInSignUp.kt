@@ -54,8 +54,7 @@ fun SignInSignUpScreen(
     content: @Composable () -> Unit
 ) {
     LazyColumn(
-        modifier = modifier,
-        contentPadding = contentPadding
+        modifier = modifier, contentPadding = contentPadding
     ) {
         item {
             Spacer(modifier = Modifier.height(44.dp))
@@ -80,32 +79,30 @@ fun SignInSignUpScreen(
 @OptIn(ExperimentalMaterial3Api::class) // CenterAlignedTopAppBar is experimental in m3
 @Composable
 fun SignInSignUpTopAppBar(
-    topAppBarText: String,
-    onNavUp: () -> Unit
+    topAppBarText: String, onNavUp: () -> Unit
 ) {
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                text = topAppBarText,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = onNavUp) {
-                Icon(
-                    imageVector = Icons.Filled.ChevronLeft,
-                    contentDescription = stringResource(id = R.string.back),
-                    tint = MaterialTheme.colorScheme.primary
+    Column(modifier = Modifier.fillMaxWidth()) {
+        CenterAlignedTopAppBar(
+            title = {
+                Text(
+                    text = topAppBarText
                 )
-            }
-        },
-        // We need to balance the navigation icon, so we add a spacer.
-        actions = {
-            Spacer(modifier = Modifier.width(68.dp))
-        },
-    )
+            },
+            navigationIcon = {
+                IconButton(onClick = onNavUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ChevronLeft,
+                        contentDescription = stringResource(id = R.string.back),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            },
+            // We need to balance the navigation icon, so we add a spacer.
+//        actions = {
+//            Spacer(modifier = Modifier.width(68.dp))
+//        },
+        )
+    }
 }
 
 @Composable
@@ -136,14 +133,11 @@ fun Email(
         textStyle = MaterialTheme.typography.bodyMedium,
         isError = emailState.showErrors(),
         keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = imeAction,
-            keyboardType = KeyboardType.Email
+            imeAction = imeAction, keyboardType = KeyboardType.Email
         ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                onImeAction()
-            }
-        ),
+        keyboardActions = KeyboardActions(onDone = {
+            onImeAction()
+        }),
         singleLine = true
     )
 
@@ -159,63 +153,48 @@ fun Password(
     onImeAction: () -> Unit = {}
 ) {
     val showPassword = rememberSaveable { mutableStateOf(false) }
-    OutlinedTextField(
-        value = passwordState.text,
-        onValueChange = {
-            passwordState.text = it
-            passwordState.enableShowErrors()
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .onFocusChanged { focusState ->
-                passwordState.onFocusChange(focusState.isFocused)
-                if (!focusState.isFocused) {
-                    passwordState.enableShowErrors()
-                }
-            },
-        textStyle = MaterialTheme.typography.bodyMedium,
-        label = {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        },
-        trailingIcon = {
-            if (showPassword.value) {
-                IconButton(onClick = { showPassword.value = false }) {
-                    Icon(
-                        imageVector = Icons.Filled.Visibility,
-                        contentDescription = stringResource(id = R.string.hide_password)
-                    )
-                }
-            } else {
-                IconButton(onClick = { showPassword.value = true }) {
-                    Icon(
-                        imageVector = Icons.Filled.VisibilityOff,
-                        contentDescription = stringResource(id = R.string.show_password)
-                    )
-                }
+    OutlinedTextField(value = passwordState.text, onValueChange = {
+        passwordState.text = it
+        passwordState.enableShowErrors()
+    }, modifier = modifier
+        .fillMaxWidth()
+        .onFocusChanged { focusState ->
+            passwordState.onFocusChange(focusState.isFocused)
+            if (!focusState.isFocused) {
+                passwordState.enableShowErrors()
             }
-        },
-        visualTransformation = if (showPassword.value) {
-            VisualTransformation.None
+        }, textStyle = MaterialTheme.typography.bodyMedium, label = {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+        )
+    }, trailingIcon = {
+        if (showPassword.value) {
+            IconButton(onClick = { showPassword.value = false }) {
+                Icon(
+                    imageVector = Icons.Filled.Visibility,
+                    contentDescription = stringResource(id = R.string.hide_password)
+                )
+            }
         } else {
-            PasswordVisualTransformation()
-        },
-        isError = passwordState.showErrors(),
-        supportingText = {
-            passwordState.getError()?.let { error -> TextFieldError(textError = error) }
-        },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = imeAction,
-            keyboardType = KeyboardType.Password
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                onImeAction()
+            IconButton(onClick = { showPassword.value = true }) {
+                Icon(
+                    imageVector = Icons.Filled.VisibilityOff,
+                    contentDescription = stringResource(id = R.string.show_password)
+                )
             }
-        ),
-        singleLine = true
+        }
+    }, visualTransformation = if (showPassword.value) {
+        VisualTransformation.None
+    } else {
+        PasswordVisualTransformation()
+    }, isError = passwordState.showErrors(), supportingText = {
+        passwordState.getError()?.let { error -> TextFieldError(textError = error) }
+    }, keyboardOptions = KeyboardOptions.Default.copy(
+        imeAction = imeAction, keyboardType = KeyboardType.Password
+    ), keyboardActions = KeyboardActions(onDone = {
+        onImeAction()
+    }), singleLine = true
     )
 }
 
@@ -236,12 +215,10 @@ fun TextFieldError(textError: String) {
 
 @Composable
 fun OrSignInAsGuest(
-    onSignInAsGuest: () -> Unit,
-    modifier: Modifier = Modifier
+    onSignInAsGuest: () -> Unit, modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = stringResource(id = R.string.or),
@@ -265,10 +242,7 @@ fun OrSignInAsGuest(
 fun SignInSignUpScreenPreview() {
     AptekaTheme {
         Surface {
-            SignInSignUpScreen(
-                onSignInAsGuest = {},
-                content = {}
-            )
+            SignInSignUpScreen(onSignInAsGuest = {}, content = {})
         }
     }
 }

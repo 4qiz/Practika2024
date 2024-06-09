@@ -1,4 +1,4 @@
-package com.lakedev.apteka.signinsignup
+package com.lakedev.apteka.data.repository
 
 import android.net.http.HttpException
 import android.os.Build

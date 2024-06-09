@@ -6,34 +6,29 @@ import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresExtension
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.TweenSpec
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.IntOffset
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.lakedev.apteka.signinsignup.UserRepository
+import com.lakedev.apteka.data.repository.UserRepository
 
 private const val CONTENT_ANIMATION_DURATION = 300
 
 /**
- * Displays a [SurveyQuestionsScreen] tied to the passed [SurveyViewModel]
+ * Displays a [MedicineListLayout] tied to the passed [MedicineListViewModel]
  */
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
-fun SurveyRoute(
+fun MedicinesListRoute(
     onSurveyComplete: () -> Unit,
     onNavigateToDetails: (id: Int) -> Unit,
     onNavUp: () -> Unit,
 ) {
-    val viewModel: SurveyViewModel = viewModel(
+    val viewModel: MedicineListViewModel = viewModel(
         factory = SurveyViewModelFactory(PhotoUriManager(LocalContext.current))
     )
 
@@ -44,7 +39,7 @@ fun SurveyRoute(
         }
     }
 
-    SurveyQuestionsScreen(
+    MedicineListLayout(
         surveyScreenData = surveyScreenData,
         isNextEnabled = viewModel.isNextEnabled,
         onClosePressed = {
@@ -59,7 +54,7 @@ fun SurveyRoute(
         val modifier = Modifier.padding(paddingValues)
 
         //content
-        MedicinesList(viewModel, modifier, onNavigateToDetails)
+        MedicinesListScreen(viewModel, modifier, onNavigateToDetails)
 
     }
 }

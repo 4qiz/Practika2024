@@ -2,6 +2,7 @@ package com.lakedev.apteka.signinsignup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.lakedev.apteka.data.repository.UserRepository
 
 class WelcomeViewModel(private val userRepository: UserRepository) : ViewModel() {
 

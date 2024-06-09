@@ -14,7 +14,7 @@
     <string name="terms_and_conditions">By continuing, you agree to our Terms of Service. We’ll
         handle your data according to our Privacy Policy.</string>
     <string name="feature_not_available">Feature not available</string>
-    <string name="dismiss">Dismiss</string>
+    <string name="dismiss">Закрыть</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="done">Done</string>
@@ -66,5 +66,7 @@
 
     <!-- apteka -->
     <string name="medicines">Препараты</string>
+    <string name="medicine">Препарат</string>
+    <string name="availability">Наличие на складах</string>
 
 </resources>

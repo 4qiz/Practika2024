@@ -56,6 +56,8 @@ composeCompiler {
 
 dependencies {
 
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
     // ViewModel and LiveData for MVVM architecture
     //implementation (libs.androidx.lifecycle.viewmodel.compose.v100alpha07)
     implementation (libs.androidx.lifecycle.livedata)
@@ -63,6 +65,7 @@ dependencies {
     // Retrofit for API requests
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.androidx.runtime.livedata)
 
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)

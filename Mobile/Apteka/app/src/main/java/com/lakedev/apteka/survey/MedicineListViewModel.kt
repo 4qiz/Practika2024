@@ -1,45 +1,36 @@
 package com.lakedev.apteka.survey
 
 import android.net.Uri
-import android.net.http.HttpException
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresExtension
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.lakedev.apteka.data.RetrofitInstance
 import com.lakedev.apteka.data.dtos.medicine.MedicineGetDto
-import com.lakedev.apteka.signinsignup.User
-import com.lakedev.apteka.signinsignup.UserRepository
+import com.lakedev.apteka.data.repository.MedicineRepository
 import kotlinx.coroutines.launch
-import java.net.UnknownHostException
 
 const val simpleDateFormatPattern = "EEE, MMM d"
 
-class SurveyViewModel(
+class MedicineListViewModel(
     private val photoUriManager: PhotoUriManager
 ) : ViewModel() {
 
-    private val apiService = RetrofitInstance.api
+    private val repository = MedicineRepository()
 
-    var medicines by mutableStateOf<List<MedicineGetDto>>(emptyList())
+    private val _medicines = MutableLiveData<List<MedicineGetDto>>()
+    val medicines: LiveData<List<MedicineGetDto>> = _medicines
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    fun getMedicines() {
+    suspend fun fetchMedicines() {
         viewModelScope.launch {
             try {
-                val response = apiService.getMedicines()
-                if (response.isNotEmpty()) {
-                    medicines = response
-                }
+                val cards = repository.getMedicines()
+                _medicines.value = cards
             } catch (e: Exception) {
-                Log.e("SurveyViewModel", e.message ?: "")
+                Log.e("MedicineListViewModel", e.message ?: "")
             }
         }
     }
@@ -175,8 +166,8 @@ class SurveyViewModelFactory(
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SurveyViewModel::class.java)) {
-            return SurveyViewModel(photoUriManager) as T
+        if (modelClass.isAssignableFrom(MedicineListViewModel::class.java)) {
+            return MedicineListViewModel(photoUriManager) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

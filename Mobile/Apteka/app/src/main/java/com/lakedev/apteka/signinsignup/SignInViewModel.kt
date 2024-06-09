@@ -3,12 +3,10 @@ package com.lakedev.apteka.signinsignup
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresExtension
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.lakedev.apteka.data.RetrofitInstance
+import com.lakedev.apteka.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class SignInViewModel(private val userRepository: UserRepository) : ViewModel() {

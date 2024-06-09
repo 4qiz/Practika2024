@@ -11,14 +11,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.lakedev.apteka.Destinations.MEDICINE_DETAILS
 import com.lakedev.apteka.Destinations.SIGN_IN_ROUTE
-import com.lakedev.apteka.Destinations.SIGN_UP_ROUTE
 import com.lakedev.apteka.Destinations.SURVEY_RESULTS_ROUTE
 import com.lakedev.apteka.Destinations.SURVEY_ROUTE
 import com.lakedev.apteka.Destinations.WELCOME_ROUTE
 import com.lakedev.apteka.signinsignup.SignInRoute
 import com.lakedev.apteka.signinsignup.WelcomeRoute
 import com.lakedev.apteka.survey.SurveyResultScreen
-import com.lakedev.apteka.survey.SurveyRoute
+import com.lakedev.apteka.survey.MedicinesListRoute
 import com.lakedev.apteka.survey.medicine_details.MedicineDetailsRoute
 
 object Destinations {
@@ -82,7 +81,7 @@ fun AptekaNavHost(
 //        }
 //
         composable(SURVEY_ROUTE) {
-            SurveyRoute(
+            MedicinesListRoute(
                 onSurveyComplete = {
                     navController.navigate(SURVEY_RESULTS_ROUTE)
                 },
