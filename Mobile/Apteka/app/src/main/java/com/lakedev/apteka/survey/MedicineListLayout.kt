@@ -16,7 +16,10 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -173,7 +176,7 @@ fun SurveyTopAppBar(
                     modifier = Modifier.padding(4.dp)
                 ) {
                     Icon(
-                        Icons.Filled.Close,
+                        Icons.AutoMirrored.Default.Logout,
                         contentDescription = stringResource(id = R.string.close),
                         tint = MaterialTheme.colorScheme.onSurface.copy(stronglyDeemphasizedAlpha)
                     )
