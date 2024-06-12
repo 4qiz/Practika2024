@@ -7,6 +7,7 @@ import com.lakedev.apteka.data.dtos.signinsignup.LoginResponseDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -21,7 +22,7 @@ interface ApiService {
     suspend fun getMedicine(@Path("id") id: Int): MedicineGetDto
 
     @POST("Medicine/writeoff")
-    suspend fun writeOff(@Body medicineOnWarehouseDto: MedicineOnWarehouseDto): Response<String>
+    suspend fun writeOff(@Body medicineOnWarehouseDto: MedicineOnWarehouseDto, @Header("Authorization") token: String,): Response<String>
 
     @POST("Medicine/add")
     suspend fun addToWarehouse(@Body medicineOnWarehouseDto: MedicineOnWarehouseDto): Response<String>

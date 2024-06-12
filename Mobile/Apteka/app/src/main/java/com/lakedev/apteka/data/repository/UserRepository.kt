@@ -76,4 +76,15 @@ object UserRepository {
         _isLoggedIn = false
         _user = User.NoUserLoggedIn
     }
+
+    fun isAuthorized() : Boolean{
+        return user is User.LoggedInUser
+    }
+
+    fun getUserToken() : String{
+        return when(user) {
+            is User.LoggedInUser -> ("Bearer " + (user as User.LoggedInUser).response.token)
+            else -> ""
+        }
+    }
 }

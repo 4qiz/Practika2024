@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.lakedev.apteka.R
 import com.lakedev.apteka.data.dtos.medicine.WarehouseHasMedicineDto
+import com.lakedev.apteka.data.repository.UserRepository
 import com.lakedev.apteka.util.supportWideScreen
 import kotlinx.coroutines.launch
 
@@ -186,17 +187,18 @@ fun DetailsContent(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        if (warehousesList.isNotEmpty()) {
-            ProductDetails(
-                warehousesList,
-                state = state,
-                onDismiss = onDismiss,
-                onConfirmation = onConfirmation,
-                onShowDialog = onShowDialog,
-                updateQuantity = updateQuantity,
-                quantity = quantity
-            )
+        if (UserRepository.isAuthorized()) {
+            if (warehousesList.isNotEmpty()) {
+                ProductDetails(
+                    warehousesList,
+                    state = state,
+                    onDismiss = onDismiss,
+                    onConfirmation = onConfirmation,
+                    onShowDialog = onShowDialog,
+                    updateQuantity = updateQuantity,
+                    quantity = quantity
+                )
+            }
         }
     }
 }
@@ -230,7 +232,7 @@ fun ProductDetails(
                     text = "${warehouse.stockQuantity} шт.",
                     color = if (warehouse.stockQuantity!! < 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
                 )
-                Button(onClick = { onShowDialog(warehouse.warehouseId ?: 0) } ) {
+                Button(onClick = { onShowDialog(warehouse.warehouseId ?: 0) }) {
                     Text(text = "Списать")
                 }
             }
