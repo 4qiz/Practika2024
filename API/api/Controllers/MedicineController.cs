@@ -4,6 +4,7 @@ using api.Dtos.WarehouseHasMedicine;
 using api.Helpers;
 using api.Mappers;
 using api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,7 +56,12 @@ namespace api.Controllers
             return Ok(medicinesFiltered.Select(m => m.ToDtoFromMedicine()));
         }
 
-        // GET: api/Medicine/5
+        /// <summary>
+        /// Fetches a medicine by id
+        /// </summary>
+        /// <param name="query">id of medicine</param>
+        /// <response code="200">Medicine</response>
+        /// <response code="404">Medicine not found</response>
         [HttpGet("{id}")]
         public async Task<ActionResult<MedicineDto>> GetMedicine(int id)
         {
@@ -76,6 +82,13 @@ namespace api.Controllers
             return medicine.ToDtoFromMedicine();
         }
 
+        /// <summary>
+        /// Add new Medicine to database
+        /// </summary>
+        /// <param name="medicineDto">Medicine object</param>
+        /// <response code="201">Medicine created</response>
+        /// <response code="401">Unauthorized</response>
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Medicine>> PostMedicine(MedicineDto medicineDto)
         {
@@ -91,6 +104,15 @@ namespace api.Controllers
             return CreatedAtAction("PostMedicine", new { id = medicineDto.MedicineId }, medicineDto);
         }
 
+        /// <summary>
+        /// Add medicine to warehouse
+        /// </summary>
+        /// <param name="createDto">The query object containing filters for fetching medicines.</param>
+        /// <response code="201">Medicine successfully added to the warehouse.</response>
+        /// <response code="400">Bad request, invalid input data.</response>
+        /// <response code="404">Not found</response>
+        /// <response code="401">Unauthorized</response>
+        [Authorize]
         [HttpPost("add")]
         public async Task<IActionResult> AddMedicineToWarehouse(WarehouseHasMedicineCreateDto createDto)
         {
@@ -141,6 +163,15 @@ namespace api.Controllers
             return Created();
         }
 
+        /// <summary>
+        /// Write off medicine from the warehouse.
+        /// </summary>
+        /// <param name="createDto">The object containing information about the medicine to be written off from the warehouse.</param>
+        /// <response code="201">Medicine successfully written off from the warehouse.</response>
+        /// <response code="400">Bad request, invalid input data or trying to write off a negative/zero amount.</response>
+        /// <response code="404">Not found, either medicine or warehouse not found.</response>
+        /// <response code="401">Unauthorized request.</response>
+        [Authorize]
         [HttpPost("writeoff")]
         public async Task<IActionResult> WriteoffMedicineFromWarehouse(WarehouseHasMedicineCreateDto createDto)
         {
@@ -188,6 +219,16 @@ namespace api.Controllers
             return Created();
         }
 
+        /// <summary>
+        /// Transfer medicine from one warehouse to another.
+        /// </summary>
+        /// <param name="transfer">The object containing information about the medicine transfer between warehouses.</param>
+        /// <returns>Returns the medicine transfer details after successful transfer.</returns>
+        /// <response code="201">Medicine transferred successfully.</response>
+        /// <response code="400">Bad request, either invalid input data or trying to transfer to the same warehouse.</response>
+        /// <response code="404">Not found, if either source warehouse, destination warehouse, or medicine not found.</response>
+        /// <response code="401">Unauthorized request.</response>
+        [Authorize]
         [HttpPost("Transfer")]
         public async Task<ActionResult<MedicineDto>> TransferMedicine([FromBody] TransferMedicineDto transfer)
         {
@@ -259,6 +300,14 @@ namespace api.Controllers
             return Created();
         }
 
+        /// <summary>
+        /// Import a list of medicines into the system.
+        /// </summary>
+        /// <param name="medicineDto">The list of MedicineDto objects containing information about the medicines to import.</param>
+        /// <returns>Returns a 200 Ok status after successfully importing medicines.</returns>
+        /// <response code="200">Medicines imported successfully.</response>
+        /// <response code="401">Unauthorized request.</response>
+        [Authorize]
         [HttpPost("import_list")]
         public async Task<ActionResult<Medicine>> PostMedicines(List<MedicineDto> medicineDto)
         {
@@ -277,7 +326,15 @@ namespace api.Controllers
             return Ok();
         }
 
-        // DELETE: api/Medicine/5
+        /// <summary>
+        /// Delete a medicine by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the medicine to delete.</param>
+        /// <returns>Returns a 204 No Content status after successfully deleting the medicine.</returns>
+        /// <response code="204">Medicine deleted successfully.</response>
+        /// <response code="404">Medicine not found.</response>
+        /// <response code="401">Unauthorized request.</response>
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMedicine(int id)
         {
