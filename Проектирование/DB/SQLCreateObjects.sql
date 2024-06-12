@@ -78,37 +78,31 @@ SELECT * FROM dbo.GetAvailableMedicinesInWarehouse(1);
 
 --Triggers
 
---Ётот триггер выполн€етс€ после вставки данных в таблицу WarehouseHasMedicines.
---“риггер провер€ет, есть ли достаточное количество товара в наличии после вставки новой записи. 
---≈сли после вставки общее количество товара станет отрицательным, операци€ вставки отмен€етс€ и выводитс€ сообщение об ошибке.
---“акой триггер помогает контролировать управление запасами и предотвращает отрицательные остатки товара в складской системе.
-CREATE TRIGGER trg_After_Insert_WarehouseHasMedicines
-ON WarehouseHasMedicines
-AFTER INSERT
+CREATE TABLE OpenrationLog (
+	Operation VARCHAR(50), 
+	ChangedDate DATETIME DEFAULT GETDATE(), 
+	CurrentUser VARCHAR(50) 
+);
+
+--триггер дл€ логировани€ операций 
+CREATE TRIGGER trAddLogs
+ON Medicine
+AFTER INSERT, DELETE, UPDATE
 AS
 BEGIN
-    DECLARE @MedicineId INT, @WarehouseId INT, @Quantity INT;
-
-    SELECT TOP 1 @MedicineId = MedicineId, @WarehouseId = WarehouseId, @Quantity = Quantity
-    FROM inserted;
-
-    -- ѕровер€ем, осталось ли количество товара в наличии после вставки
-    IF @Quantity > 0
-    BEGIN
-        DECLARE @CurrentStock INT;
-
-        SELECT @CurrentStock = Quantity
-        FROM WarehouseHasMedicines
-        WHERE MedicineId = @MedicineId AND WarehouseId = @WarehouseId;
-
-        IF (@CurrentStock - @Quantity) < 0
-        BEGIN
-            RAISERROR('Not enough stock available for this product in this warehouse.', 16, 1);
-            ROLLBACK TRANSACTION; -- ќткат операции
-        END;
-    END;
+	DECLARE @operation VARCHAR(10)
+	IF EXISTS(SELECT * FROM inserted) AND EXISTS(SELECT * FROM deleted)
+		SET @operation = 'Update'
+	ELSE IF EXISTS(SELECT * FROM inserted)
+		SET @operation = 'Insert'
+	ELSE SET @operation = 'Delete'
+	INSERT INTO OperationLog (Operation, ChangedDate, CurrentUser)
+	VALUES (@operation, GETDATE(), SUSER_NAME());
 END;
 
+UPDATE Medicine
+SET Price = 99.99
+WHERE MedicineId = 1;
 
 -- —оздаем таблицу дл€ истории изменений цены
 CREATE TABLE PriceChangeHistory(
