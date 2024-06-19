@@ -43,7 +43,8 @@ namespace api.Controllers
 
             if (!string.IsNullOrWhiteSpace(query.WarehouseTitle))
             {
-                var warehouse = _context.Warehouses.FirstOrDefault(w => w.Name.ToLower().Contains(query.WarehouseTitle.ToLower()));
+                var normalizedQuery = query.WarehouseTitle.ToLower();
+                var warehouse = _context.Warehouses.FirstOrDefault(w => w.Name.ToLower().Contains(normalizedQuery));
                 if (warehouse == null)
                 {
                     return NotFound("Склад не найден");

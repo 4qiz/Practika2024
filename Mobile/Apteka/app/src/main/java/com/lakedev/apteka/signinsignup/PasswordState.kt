@@ -26,7 +26,7 @@ private fun isPasswordValid(password: String): Boolean {
 
 @Suppress("UNUSED_PARAMETER")
 private fun passwordValidationError(password: String): String {
-    return "Invalid password"
+    return "Пароль должен быть больше 4 символов"
 }
 
 private fun passwordConfirmationError(): String {
