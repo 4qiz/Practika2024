@@ -202,7 +202,7 @@ namespace api.Controllers
                 {
                     return NotFound($"Препарат id = {createDto.MedicineId} не найден на складе id = {createDto.WarehouseId}");
                 }
-                if (warehouseHasMedicine.Quantity < createDto.Quantity)
+                if (!MedicineControllerHelpers.IsEnough(createDto.Quantity, warehouseHasMedicine.Quantity ))
                 {
                     return BadRequest("Списание больше, чем есть на складе");
                 }
@@ -263,7 +263,7 @@ namespace api.Controllers
                 {
                     return NotFound($"Препарат id = {transfer.MedicineId} не найден на складе id = {transfer.FromWarehouseId}");
                 }
-                if (fromWarehouseHasMedicine.Quantity < transfer.Quantity)
+                if (!MedicineControllerHelpers.IsEnough(transfer.Quantity, fromWarehouseHasMedicine.Quantity))
                 {
                     return BadRequest("Списание больше, чем есть на складе");
                 }
@@ -282,7 +282,7 @@ namespace api.Controllers
                         WarehouseId = transfer.ToWarehouseId,
                         Quantity = transfer.Quantity,
                     };
-                   await _context.AddAsync(toWarehouseHasMedicine);
+                    await _context.AddAsync(toWarehouseHasMedicine);
                 }
                 else
                 {
